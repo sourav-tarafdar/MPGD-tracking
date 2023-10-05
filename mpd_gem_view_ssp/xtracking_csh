@@ -1,0 +1,23 @@
+#!/bin/csh
+
+source setup_env.csh
+
+#RUN=$1
+
+
+echo "analyzing run" $1
+
+# replay run
+./bin/replay -c 0 -t 0 -z 1 --tracking on --pedestal /gpfs02/eic/starafdar/MPGD-tracking/mpd_gem_view_ssp/database/gem_ped_modvuped_256.dat --common_mode /gpfs02/eic/starafdar/MPGD-tracking/mpd_gem_view_ssp/database/CommonModeRange_modvuped_256.txt --output_root_path /gpfs02/eic/starafdar/MPGD-tracking_out/Rootfile_mod_pedv3_zz /gpfs02/eic/starafdar/TG_06_23/fermilab_beamtest_$1.evio.0
+#./bin/replay -c 0 -t 0 -z 1 --tracking on --pedestal /gpfs02/eic/starafdar/MPGD-tracking/mpd_gem_view_ssp/database/gem_ped_256.dat --common_mode /gpfs02/eic/starafdar/MPGD-tracking/mpd_gem_view_ssp/database/CommonModeRange_256.txt --output_root_path /gpfs02/eic/starafdar/MPGD-tracking_out/Rootfiles_unmodped /gpfs02/eic/starafdar/TG_06_23/fermilab_beamtest_$1.evio.0
+#./bin/replay -c 0 -t 0 -z 1 --tracking on --pedestal /gpfs02/eic/starafdar/MPGD-tracking/mpd_gem_view_ssp/database/gem_ped_348.dat --common_mode /gpfs02/eic/starafdar/MPGD-tracking/mpd_gem_view_ssp/database/CommonModeRange_348.txt --output_root_path /gpfs02/eic/starafdar/MPGD-tracking_out/Rootfiles_unmodped /gpfs02/eic/starafdar/TG_06_23/fermilab_beamtest_$1.evio.0
+
+
+# plot run
+set ROOT_FILE='scripts/plot_quality_results.cpp("/gpfs02/eic/starafdar/MPGD-tracking_out/Rootfile_mod_pedv3_zz/cluster_0_fermilab_beamtest_'${1}'..root_data_quality_check.root")'
+#set ROOT_FILE='scripts/plot_quality_results.cpp("/gpfs02/eic/starafdar/MPGD-tracking_out/Rootfiles_unmodped/cluster_0_fermilab_beamtest_'${1}'..root_data_quality_check.root")'
+root -b -q $ROOT_FILE
+
+# show run
+evince /gpfs02/eic/starafdar/MPGD-tracking_out/Rootfile_mod_pedv3_zz/cluster_0_fermilab_beamtest_$1..root_data_quality_check.root.pdf 
+#evince /gpfs02/eic/starafdar/MPGD-tracking_out/Rootfiles_unmodped/cluster_iter2_wopedmodzz_0_fermilab_beamtest_$1..root_data_quality_check.root.pdf 
