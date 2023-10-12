@@ -818,7 +818,7 @@ void GEMAPV::ZeroSuppression()
       CommonModeCorrection_MPD(&raw_data[DATA_INDEX(0, ts)], APV_STRIP_SIZE, ts);
 #endif
     }
-  std::cout << " MPD IDs :" << mpd_id << std::endl;
+  //std::cout << " MPD IDs :" << mpd_id << std::endl;
   /*  if(mpd_id > 1 && mpd_id < 4){ //Here picking up VU prototypes for categorizing two groups of zero suppression
       for(uint32_t i = 0; i < APV_STRIP_SIZE-64; ++i)
       { //  APV connected strips (1st 64 strips)
@@ -1141,10 +1141,11 @@ float GEMAPV::dynamic_ts_common_mode_sorting(float *buf, const uint32_t &size)
   //int layer_id = plane->GetDetector()->GetLayer()->GetID();
   //int layer_id = GetPlane()->GetDetector()->GetLayer()->GetID();
   int layer_id = GetPlane()->GetDetector()->GetLayerID();
-  std::cout << " layer id :" << layer_id << std::endl;
+  //std::cout << " layer id :" << layer_id << std::endl;
 
-  if(layer_id < 2 && layer_id > 3){ // standard 512 strips
-    for(uint32_t i = 0; i < size; ++i)
+  //if(layer_id < 2 || layer_id > 3){ // standard 512 strips
+  if(layer_id == 2 || layer_id == 3){//VU strips
+    for(uint32_t i = 64; i < size; ++i)
       {
 	average += buf[i];
 	count++;
@@ -1156,9 +1157,9 @@ float GEMAPV::dynamic_ts_common_mode_sorting(float *buf, const uint32_t &size)
 	  binary_insert_find_high(high_adc, buf[i], 0, NUM_HIGH_STRIPS);
 #endif
       }
-  }else{ // VU prototypes
-      
-    for(uint32_t i = 0; i < size-64; ++i)
+  }else{
+   
+    for(uint32_t i = 0; i < size; ++i)
       {
 	
 	average += buf[i];
@@ -1170,9 +1171,9 @@ float GEMAPV::dynamic_ts_common_mode_sorting(float *buf, const uint32_t &size)
 	if(buf[i] > high_adc[0])
 	  binary_insert_find_high(high_adc, buf[i], 0, NUM_HIGH_STRIPS);
 #endif
-	}	  
-      
-      }
+      }	  
+    
+  }
 	
 	//std::cout<<"debug: average: "<<average/(float)count<<std::endl;
 	for(uint32_t i = 0; i < NUM_HIGH_STRIPS; i++)
